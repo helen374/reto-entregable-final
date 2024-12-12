@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artesanías de Colombia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background-color: #3b7a57;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        nav {
+            background-color: #2e5a42;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.2em;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .section {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .section h2 {
+            font-size: 2em;
+            color: #3b7a57;
+        }
+
+        .gallery {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        .gallery img {
+            width: 300px;
+            height: 200px;
+            object-fit: cover;
+            margin: 10px;
+            border-radius: 10px;
+        }
+
+        footer {
+            background-color: #2e5a42;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        #cart {
+            background-color: #fff;
+            padding: 10px;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #cart button {
+            background-color: #3b7a57;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #cart button:hover {
+            background-color: #2e5a42;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Artesanías de Colombia</h1>
+        <p>Una ventana a la riqueza cultural y artesanal de Colombia</p>
+    </header>
+
+    <nav>
+        <a href="#gallery">Galería</a>
+        <a href="#about">Sobre Nosotros</a>
+        <a href="#mission">Misión</a>
+        <a href="#vision">Visión</a>
+        <a href="#contact">Contacto</a>
+    </nav>
+
+    <!-- Contador de Visitas -->
+    <section id="visit-counter" class="section">
+        <p>Visitas: <span id="visit-count">0</span></p>
+    </section>
+
+    <section id="gallery" class="section">
+        <h2>Galería de Artesanías</h2>
+        <div class="gallery" id="products">
+            <!-- Productos se agregarán dinámicamente aquí -->
+        </div>
+    </section>
+
+    <section id="cart" class="section">
+        <h2>Carrito de Compras</h2>
+        <div id="cart-items"></div>
+        <p>Total: <span id="total-price">$0</span></p>
+        <p>Cantidad de productos: <span id="product-count">0</span></p>
+        <button id="checkout">Finalizar Compra</button>
+    </section>
+
+    <section id="about" class="section">
+        <h2>Sobre las Artesanías de Colombia</h2>
+        <p>Las artesanías de Colombia representan una de las tradiciones más ricas del país, reflejando su diversidad cultural, geográfica y étnica. Desde las mochilas Wayuu en la Guajira hasta las figuras en barro de la región de Boyacá, cada pieza cuenta una historia única.</p>
+    </section>
+
+    <section id="mission" class="section">
+        <h2>Misión</h2>
+        <p>Promover y preservar la riqueza cultural de las artesanías colombianas, brindando a nuestros artesanos una plataforma para exhibir su talento, compartir su tradición y conectar con el mundo, mientras apoyamos el desarrollo económico y social de sus comunidades.</p>
+    </section>
+
+    <section id="vision" class="section">
+        <h2>Visión</h2>
+        <p>Ser una referencia internacional en la promoción de las artesanías colombianas, ofreciendo un espacio donde la tradición y la innovación se fusionen, contribuyendo al reconocimiento global de la artesanía colombiana como un patrimonio cultural invaluable.</p>
+    </section>
+
+    <section id="contact" class="section">
+        <h2>Contacto</h2>
+        <p>Si deseas más información sobre nuestras artesanías o quieres adquirir una pieza, no dudes en contactarnos.</p>
+        <p>Email: contacto@artesaniascolombia.com</p>
+        <p>Teléfono: +57 123 456 7890</p>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Artesanías de Colombia. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // Productos disponibles
+        const productos = [
+            { id: 1, nombre: "Mochila Wayuu", precio: 50 },
+            { id: 2, nombre: "Figura en barro", precio: 30 },
+            { id: 3, nombre: "Sombrero Vueltiao", precio: 20 },
+            { id: 4, nombre: "Cesta de palma", precio: 25 }
+        ];
+
+        let carrito = [];
+        let visitCount = localStorage.getItem('visitCount') || 0;
+        let productCount = 0;
+        let totalPrice = 0;
+
+        // Mostrar los productos en la galería
+        function mostrarProductos() {
+            const productList = document.getElementById('products');
+            productList.innerHTML = "";
+            productos.forEach(product => {
+                let productDiv = document.createElement('div');
+                productDiv.classList.add('product');
+                productDiv.innerHTML = `
+                    <h3>${product.nombre}</h3>
+                    <p>Precio: $${product.precio}</p>
+                    <button onclick="agregarAlCarrito(${product.id})">Agregar al Carrito</button>
+                `;
+                productList.appendChild(productDiv);
+            });
+        }
+
+        // Agregar producto al carrito
+        function agregarAlCarrito(id) {
+            const producto = productos.find(p => p.id === id);
+            carrito.push(producto);
+            actualizarCarrito();
+        }
+
+        // Actualizar la vista del carrito
+        function actualizarCarrito() {
+            let cartItems = document.getElementById('cart-items');
+            let totalPriceElement = document.getElementById('total-price');
+            let productCountElement = document.getElementById('product-count');
+
+            cartItems.innerHTML = "";
+            carrito.forEach(product => {
+                let itemDiv = document.createElement('div');
+                itemDiv.innerHTML = ${product.nombre} - $${product.precio};
+                cartItems.appendChild(itemDiv);
+            });
+
+            totalPrice = carrito.reduce((total, product) => total + product.precio, 0);
+            productCount = carrito.length;
+            totalPriceElement.innerText = $${totalPrice};
+            productCountElement.innerText = productCount;
+        }
+
+        // Contador de visitas
+        function actualizarContadorDeVisitas() {
+            visitCount++;
+            localStorage.setItem('visitCount', visitCount);
+            document.getElementById('visit-count').innerText = visitCount;
+        }
+
+        // Inicializar el sitio
+        function inicializar() {
+            mostrarProductos();
+            actualizarContadorDeVisitas();
+        }
+
+        // Llamada a la inicialización
+        inicializar();
+    </script>
+
+</body>
+</html>
